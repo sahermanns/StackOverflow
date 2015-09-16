@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import <AFNetworking/AFNetworking.h>
 
 @interface AppDelegate ()
 
@@ -17,6 +18,11 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   // Override point for customization after application launch.
+  
+//  dispatch_queue_t myQueue = dispatch_get_global_queue(QOS_CLASS_USER_INTERACTIVE, 0);
+  
+  [[AFNetworkReachabilityManager sharedManager] startMonitoring];
+  
   return YES;
 }
 

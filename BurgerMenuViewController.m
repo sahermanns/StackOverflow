@@ -33,25 +33,6 @@ CGFloat const kburgerButtonHeight = 75.0;
 - (void)viewDidLoad {
     [super viewDidLoad];
   
-//#pragma MARK: We will use error class when we have json data
-//  NSError *error;
-//  
-//  NSString *path = [[NSBundle mainBundle] pathForResource:@"Test" ofType:@"json"];
-//  NSData *data = [NSData dataWithContentsOfFile:path];
-//  
-//  id jsonObject = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
-//  
-//  if (error) {
-//    NSLog(@"domain: %@ code:%ld",error.domain,(long)error.code);
-//    NSError *myError = [NSError errorWithDomain:kStackOverFlowErrorDomain code:StackOverFlowBadJSON userInfo:nil];
-//    
-//  }
-//  [NSURLSession sharedSession] dataTaskWithURL:nil completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) {
-//    if (error) {
-//      
-//    }
-//    
-//  }
   
   UITableViewController *mainMenuViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"MainMenu"];
   mainMenuViewController.tableView.delegate = self;
@@ -83,15 +64,21 @@ CGFloat const kburgerButtonHeight = 75.0;
   self.pan = pan;
 }
 
+//-(void)viewDidAppear:(BOOL)animated {
+//  [super viewDidAppear:animated];
+//    WebViewViewController *webVC = [[WebViewViewController alloc] init];
+//    [self presentViewController:webVC animated:true completion:nil];
+//  
+//}
 
 -(void)viewDidAppear:(BOOL)animated {
   [super viewDidAppear:animated];
-  
-  //check if you already have the token
+ NSString *existingToken = [[NSUserDefaults standardUserDefaults] objectForKey:@"token"];
+  if (!existingToken) {
   WebViewViewController *webVC = [[WebViewViewController alloc] init];
   [self presentViewController:webVC animated:true completion:nil];
 
-  
+  }
 }
 -(void)topViewControllerPanned:(UIPanGestureRecognizer *)sender {
   

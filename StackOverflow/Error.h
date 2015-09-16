@@ -12,5 +12,18 @@ extern NSString *const kStackOverFlowErrorDomain;
 
 typedef enum : NSUInteger {
   StackOverFlowBadJSON = 200,
-  StackOverFlowConnectionDown
+  StackOverFlowConnectionDown,
+  StackOverFlowTooManyAttempts,
+  StackOverFlowInvalidParameter,
+  StackOverFlowInvalidLogin,
+  StackOverFlowNeedAuthentication,
+  StackOverFlowAccessDenied,
+  StackOverFlowKeyRequestMethodDoesNotExist,
+  StackOverFlowKeyRequired,
+  StackOverFlowTokenCompromised,
+  StackOverFlowWriteRequestFail,
+  StackOverFlowDuplicateRequest,
+  StackOverFlowAPIDown,
+  StackOverFlowUnexpectedAPIError,
+  StackOverFlowGeneralError
 } StackOverFlowErrorCodes;

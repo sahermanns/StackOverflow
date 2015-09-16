@@ -8,4 +8,4 @@
 
 #import "Error.h"
 
-NSString *const kStackOverFlowErrorDomain = @"com.SASH,StackOverflow";
+NSString *const kStackOverFlowErrorDomain = @"com.SASH.StackOverflow";
