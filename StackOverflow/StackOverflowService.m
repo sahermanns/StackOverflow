@@ -11,6 +11,8 @@
 #import <AFNetworking/AFNetworking.h>
 #import "QuestionsJSONParser.h"
 #import "Question.h"
+#import "UserJSONParser.h"
+#import "User.h"
 
 @implementation StackOverflowService
 
@@ -28,6 +30,39 @@
     
     NSArray *questions = [QuestionsJSONParser searchQuestionsResultsFromJSON:responceObject];
     completionHandler(questions,nil);
+    NSLog(@"getting inside questionsForSearchTerm");
+    
+  } failure:^(AFHTTPRequestOperation * __nonnull operation, NSError * __nonnull responceObject) {
+    if (operation.response) {
+      NSError *stackOverflowError = [self errorForStatusCode:operation.response.statusCode];
+      dispatch_async(dispatch_get_main_queue(), ^{
+        completionHandler(nil, stackOverflowError);
+        NSLog(@"stackoverflow service error");
+      });
+    } else {
+      NSError *reachabilityError = [self checkReachability];
+      if (reachabilityError) {
+        completionHandler(nil, reachabilityError);
+        NSLog(@"reachability error");
+      }
+    }
+  }];
+}
+
++(void)resultsForUser:(NSString *)existingToken completionHandler:(void(^)(User *, NSError *))completionHandler {
+  
+  NSString *baseURL = @"https://api.stackexchange.com/2.2/me?order=desc&sort=reputation&site=stackoverflow";
+  NSString *key = @"33uYIz)pwmaLVoia)NH9iQ((";
+  NSString *finalURL = [NSString stringWithFormat:@"%@&key=%@&access_token=%@", baseURL,key,existingToken];
+  NSString *url = finalURL;
+    //  NSString *url = @"https://api.stackexchange.com/2.2/me?order=desc&sort=reputation&site=stackoverflow";
+  
+  AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+  
+  [manager GET:url parameters:nil success:^(AFHTTPRequestOperation * __nonnull operation, id __nonnull responceObject) {
+    
+    User *user = [UserJSONParser userResultsFromJSON:responceObject];
+    completionHandler(user,nil);
     NSLog(@"getting inside questionsForSearchTerm");
     
   } failure:^(AFHTTPRequestOperation * __nonnull operation, NSError * __nonnull responceObject) {

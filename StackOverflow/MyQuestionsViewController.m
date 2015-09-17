@@ -10,6 +10,11 @@
 
 @interface MyQuestionsViewController ()
 
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet UIImageView *profileImage;
+@property (weak, nonatomic) IBOutlet UILabel *ownerName;
+
+
 @end
 
 @implementation MyQuestionsViewController

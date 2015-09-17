@@ -7,31 +7,69 @@
 //
 
 #import "MyProfileViewController.h"
+#import "StackOverflowService.h"
+#import "WebViewViewController.h"
+#import "Error.h"
+#import "User.h"
+#import <UIKit/UIKit.h>
+
 
 @interface MyProfileViewController ()
+
+@property (weak, nonatomic) IBOutlet UIImageView *profileImage;
+@property (weak, nonatomic) IBOutlet UILabel *ownerName;
+@property (weak, nonatomic) IBOutlet UILabel *reputation;
+@property (weak, nonatomic) IBOutlet UILabel *creationDate;
+@property (strong,nonatomic) NSDateFormatter *dateFormatter;
+
+@property(strong, nonatomic) User *user;
 
 @end
 
 @implementation MyProfileViewController
 
-- (void)viewDidLoad {
+
+
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+  
+NSString *existingToken = [[NSUserDefaults standardUserDefaults] objectForKey:@"token"];
+  
+self.dateFormatter = [[NSDateFormatter alloc] init];
+self.dateFormatter.dateStyle = NSDateFormatterShortStyle;
+  
+[StackOverflowService resultsForUser:existingToken completionHandler:^(User *results, NSError *error) {
+  if (error) {
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error" message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *action = [UIAlertAction actionWithTitle:@"Okay" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+      [alertController dismissViewControllerAnimated:true completion:nil];
+    }];
+    [alertController addAction:action];
+    
+    [self presentViewController:alertController animated:true completion:nil];
+  } else {
+    self.user = results;
+    
+    NSString *avatarURL = self.user.avatarURL;
+    NSURL *imageURL = [NSURL URLWithString:avatarURL];
+    NSData *imageData = [NSData dataWithContentsOfURL:imageURL];
+    UIImage *image = [UIImage imageWithData:imageData];
+    self.user.profileImage = image;
+    self.profileImage.image = self.user.profileImage;
+    self.ownerName.text = self.user.displayName;
+    self.reputation.text = [NSString stringWithFormat:@"Reputation out of 10:%@", self.user.reputation];
+    NSString *formattedCreationDate = [self.dateFormatter stringFromDate:self.user.creationDate];
+    self.creationDate.text = [NSString stringWithFormat:@"%@",formattedCreationDate];
+
+  }
+}];
+  
+}
+
+-(void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
-}
+  
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

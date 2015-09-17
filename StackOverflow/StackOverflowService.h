@@ -7,8 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
+@class User;
 
 @interface StackOverflowService : NSObject
 
+
 +(void)questionsForSearchTerm:(NSString *)searchTerm completionHandler:(void(^)(NSArray *, NSError *))completionHandler;
+
++(void)resultsForUser:(NSString *)existingToken completionHandler:(void(^)(User *, NSError *))completionHandler;
 @end
