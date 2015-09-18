@@ -16,13 +16,13 @@
 
 @interface MyProfileViewController ()
 
-@property (weak, nonatomic) IBOutlet UIImageView *profileImage;
-@property (weak, nonatomic) IBOutlet UILabel *ownerName;
-@property (weak, nonatomic) IBOutlet UILabel *reputation;
-@property (weak, nonatomic) IBOutlet UILabel *creationDate;
-@property (strong,nonatomic) NSDateFormatter *dateFormatter;
+@property (retain, nonatomic) IBOutlet UIImageView *profileImage;
+@property (retain, nonatomic) IBOutlet UILabel *ownerName;
+@property (retain, nonatomic) IBOutlet UILabel *reputation;
+@property (retain, nonatomic) IBOutlet UILabel *creationDate;
+@property (retain,nonatomic) NSDateFormatter *dateFormatter;
 
-@property(strong, nonatomic) User *user;
+@property(retain, nonatomic) User *user;
 
 @end
 
@@ -33,8 +33,8 @@
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
   
-NSString *existingToken = [[NSUserDefaults standardUserDefaults] objectForKey:@"token"];
-  
+NSString *existingToken = [[[NSUserDefaults standardUserDefaults] objectForKey:@"token"] retain];
+
 self.dateFormatter = [[NSDateFormatter alloc] init];
 self.dateFormatter.dateStyle = NSDateFormatterShortStyle;
   
@@ -57,9 +57,11 @@ self.dateFormatter.dateStyle = NSDateFormatterShortStyle;
     self.user.profileImage = image;
     self.profileImage.image = self.user.profileImage;
     self.ownerName.text = self.user.displayName;
-    self.reputation.text = [NSString stringWithFormat:@"Reputation out of 10:%@", self.user.reputation];
-    NSString *formattedCreationDate = [self.dateFormatter stringFromDate:self.user.creationDate];
-    self.creationDate.text = [NSString stringWithFormat:@"%@",formattedCreationDate];
+    self.reputation.text = [NSString stringWithFormat:@"Reputation 0-10: %@", self.user.reputation];
+    self.creationDate.text = [self.dateFormatter stringFromDate:self.user.creationDate];
+
+    
+    [existingToken release];
 
   }
 }];
@@ -70,6 +72,16 @@ self.dateFormatter.dateStyle = NSDateFormatterShortStyle;
     [super viewDidLoad];
   
 
+}
+
+-(void)dealloc {
+  [_profileImage release];
+  [_ownerName release];
+  [_reputation release];
+  [_creationDate release];
+  [_dateFormatter release];
+  
+  [super dealloc];
 }
 
 @end

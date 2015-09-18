@@ -21,7 +21,9 @@
     User *user = [[User alloc] init];
     user.displayName = item[@"display_name"];
     user.avatarURL = item[@"profile_image"];
-    user.creationDate = item[@"creation_date"];
+    NSNumber *time = item[@"creation_date"];
+    NSTimeInterval epochTime = [time doubleValue];
+    user.creationDate = [NSDate dateWithTimeIntervalSince1970:epochTime];
     user.reputation = item[@"reputation"];
     return user;
   }

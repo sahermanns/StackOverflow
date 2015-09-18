@@ -19,8 +19,11 @@
 +(void)questionsForSearchTerm:(NSString *)searchTerm completionHandler:(void(^)(NSArray *, NSError *))completionHandler {
   
   NSString *baseURL = @"https://api.stackexchange.com/2.2/search?order=desc&sort=activity";
+  NSString *key = @"33uYIz)pwmaLVoia)NH9iQ((";
+  NSString *existingToken = [[NSUserDefaults standardUserDefaults] objectForKey:@"token"];
   NSString *endOfURL = @"site=stackoverflow";
-  NSString *finalURL = [NSString stringWithFormat:@"%@&inTitle=%@&%@", baseURL,searchTerm,endOfURL];
+//  NSString *finalURL = [NSString stringWithFormat:@"%@&inTitle=%@&%@", baseURL,searchTerm,endOfURL];
+  NSString *finalURL = [NSString stringWithFormat:@"%@&inTitle=%@&key=%@&access_token=%@&%@",baseURL,searchTerm,key,existingToken,endOfURL];
   NSString *url = finalURL;
 //  NSString *url = @"https://api.stackexchange.com/2.2/search?order=desc&sort=activity&intitle=swift&site=stackoverflow";
   

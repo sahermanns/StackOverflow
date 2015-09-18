@@ -12,19 +12,23 @@
 #import "MyQuestionsViewController.h"
 #import "WebViewViewController.h"
 #import "Error.h"
+#import "MainMenuViewController.h"
 
 CGFloat const kburgerOpenScreenDivider = 3.0;
 CGFloat const kburgerOpenScreenMultiplier = 2.0;
 NSTimeInterval const ktimeToSlideMenuOpen = 0.3;
 CGFloat const kburgerButtonWidth = 75.0;
 CGFloat const kburgerButtonHeight = 75.0;
+static void *isDownloadingContext = &isDownloadingContext;
 
 @interface BurgerMenuViewController ()<UITableViewDelegate>
 
+@property (strong,nonatomic) MainMenuViewController *menuVC;
 @property (strong,nonatomic) UIViewController *topViewController;
 @property (strong, nonatomic) NSArray *viewControllers;
 @property (strong,nonatomic) UIPanGestureRecognizer *pan;
 @property (strong,nonatomic) UIButton *burgerButton;
+@property (strong,nonatomic) SearchQuestionViewController *searchQuestionViewController;
 
 @end
 
@@ -182,23 +186,22 @@ CGFloat const kburgerButtonHeight = 75.0;
   }
   
 }
-//
-//-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context {
-//  
-//  if (context == isDownloadingContext) {
-//    BOOL newValue = [(NSNumber *)change[NSKeyValueChangeNewKey] boolValue];
-//    if (newValue) {
-//      [self.menuVC.SearchQuestionActivityIndicator startAnimating];
-//    } else {
-//      [self.menuVC.SearchQuestionActivityIndicatorActivityIndicator stopAnimating];
-//    }
-//    
-//  }
-//}
-//
-//-(void)dealloc {
-//  [self.questionSearchViewController removeObserver:self forKeyPath:@"isDownloading" context:isDownloadingContext];
-//  
-//}
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+  if (context == isDownloadingContext) {
+    BOOL newValue = [(NSNumber *)change[NSKeyValueChangeNewKey] boolValue];
+    if (newValue) {
+      [self.menuVC.questionSearchActivityIndicator startAnimating];
+    } else {
+      [self.menuVC.questionSearchActivityIndicator stopAnimating];
+    }
+    
+  }
+}
+
+
+-(void)dealloc {
+  [self.searchQuestionViewController removeObserver:self forKeyPath:@"isDownloading" context:isDownloadingContext];
+  
+}
 
 @end
