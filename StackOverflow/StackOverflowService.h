@@ -15,4 +15,6 @@
 +(void)questionsForSearchTerm:(NSString *)searchTerm completionHandler:(void(^)(NSArray *, NSError *))completionHandler;
 
 +(void)resultsForUser:(NSString *)existingToken completionHandler:(void(^)(User *, NSError *))completionHandler;
+
++(void)resultsForUserQuestions:(NSString *)existingToken completionHandler:(void(^)(NSArray *, NSError *))completionHandler;
 @end

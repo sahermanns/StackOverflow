@@ -14,6 +14,7 @@
 #import "UserJSONParser.h"
 #import "User.h"
 
+
 @implementation StackOverflowService
 
 +(void)questionsForSearchTerm:(NSString *)searchTerm completionHandler:(void(^)(NSArray *, NSError *))completionHandler {
@@ -85,7 +86,38 @@
   }];
 }
 
++(void)resultsForUserQuestions:(NSString *)existingToken completionHandler:(void(^)(NSArray *, NSError *))completionHandler {
+  
+  NSString *baseURL = @"https://api.stackexchange.com/2.2/users/{ids}/posts?order=desc&sort=activity&site=stackoverflow";
+  NSString *key = @"33uYIz)pwmaLVoia)NH9iQ((";
+  NSString *finalURL = [NSString stringWithFormat:@"%@&access_token=%@&key=%@&",baseURL,existingToken,key];
+  NSString *url = finalURL;
 
+  
+  AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+  
+  [manager GET:url parameters:nil success:^(AFHTTPRequestOperation * __nonnull operation, id __nonnull responceObject) {
+    
+    NSArray *questions = [QuestionsJSONParser searchQuestionsResultsFromJSON:responceObject];
+    completionHandler(questions,nil);
+    NSLog(@"getting inside questionsForSearchTerm");
+    
+  } failure:^(AFHTTPRequestOperation * __nonnull operation, NSError * __nonnull responceObject) {
+    if (operation.response) {
+      NSError *stackOverflowError = [self errorForStatusCode:operation.response.statusCode];
+      dispatch_async(dispatch_get_main_queue(), ^{
+        completionHandler(nil, stackOverflowError);
+        NSLog(@"stackoverflow service error");
+      });
+    } else {
+      NSError *reachabilityError = [self checkReachability];
+      if (reachabilityError) {
+        completionHandler(nil, reachabilityError);
+        NSLog(@"reachability error");
+      }
+    }
+  }];
+}
 
 +(NSError *)checkReachability {
   if (![AFNetworkReachabilityManager sharedManager].reachable) {
