@@ -52,32 +52,31 @@ NSString *existingToken = [[NSUserDefaults standardUserDefaults] objectForKey:@"
     }
   }
 }];
-}
-
-//  [StackOverflowService resultsForUserQuestions:existingToken completionHandler:^(NSArray *results, NSError *error) {
-//    if (error) {
-//      UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error" message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-//      UIAlertAction *action = [UIAlertAction actionWithTitle:@"Okay" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
-//        [alertController dismissViewControllerAnimated:true completion:nil];
-//      }];
-//      [alertController addAction:action];
-//      
-//      [self presentViewController:alertController animated:true completion:nil];
-//    } else {
-//      self.questions = results;
-//      dispatch_group_t group = dispatch_group_create();
-//      dispatch_queue_t imageQueue = dispatch_queue_create("com.SASH.StackOverflow",DISPATCH_QUEUE_CONCURRENT );
-//      
-//      for (Question *question in results) {
-//        dispatch_group_async(group, imageQueue, ^{
-//          NSString *avatarURL = question.avatarURL;
-//          NSURL *imageURL = [NSURL URLWithString:avatarURL];
-//          NSData *imageData = [NSData dataWithContentsOfURL:imageURL];
-//          UIImage *image = [UIImage imageWithData:imageData];
-//          question.profileImage = image;
-//        });
-//      }
-//      
+  
+  [StackOverflowService resultsForUserQuestions:existingToken completionHandler:^(NSArray *results, NSError *error) {
+    if (error) {
+      UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error" message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
+      UIAlertAction *action = [UIAlertAction actionWithTitle:@"Okay" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
+        [alertController dismissViewControllerAnimated:true completion:nil];
+      }];
+      [alertController addAction:action];
+      
+      [self presentViewController:alertController animated:true completion:nil];
+    } else {
+      self.questions = results;
+      dispatch_group_t group = dispatch_group_create();
+      dispatch_queue_t imageQueue = dispatch_queue_create("com.SASH.StackOverflow",DISPATCH_QUEUE_CONCURRENT );
+      
+      for (Question *question in results) {
+          NSString *avatarURL = question.avatarURL;
+          NSURL *imageURL = [NSURL URLWithString:avatarURL];
+          NSData *imageData = [NSData dataWithContentsOfURL:imageURL];
+          UIImage *image = [UIImage imageWithData:imageData];
+          question.profileImage = image;
+        };
+      }
+  }];
+   
 //      dispatch_group_notify(group, dispatch_get_main_queue(), ^{
 //        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Images Downloaded" message:nil preferredStyle:UIAlertControllerStyleAlert];
 //        UIAlertAction *action = [UIAlertAction actionWithTitle:@"Okay" style:UIAlertActionStyleDefault handler:^(UIAlertAction * action) {
@@ -88,9 +87,10 @@ NSString *existingToken = [[NSUserDefaults standardUserDefaults] objectForKey:@"
 //        [self presentViewController:alertController animated:true completion:nil];
 //        self.isDownloading = false;
 //      });
-//    }
-//
-//    ]};
+    
+  }
+
+
   
 
 - (void)viewDidLoad {
